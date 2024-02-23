@@ -39,7 +39,7 @@ export default async function createAndAddLogo() {
       
       // Position the image mesh
       imageBeltMesh.rotation.y = Math.PI / 2; // Make the belt horizontal
-      const scale = 1;
+      const scale = 0.6;
       
       imageBeltMesh.scale.set(scale, scale, scale); // Set scale to 1 for debugging
       imageBeltMesh.position.set(10, 0, 0); // Adjust x to move it away from the globe center

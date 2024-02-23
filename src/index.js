@@ -20,7 +20,8 @@ async function setupScene() {
   document.getElementById("globeContainer").appendChild(renderer.domElement);
 
   const controls = new OrbitControls(camera, renderer.domElement);
-  
+
+
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = false;
