@@ -11,8 +11,8 @@ export default async function createAndAddLogo() {
       // Create a canvas for the image
       var canvas = document.createElement("canvas");
       var context = canvas.getContext("2d");
-      canvas.width = 1024; // Adjust as needed
-      canvas.height = 1024; // Adjust as needed
+      canvas.width = 256; // Adjust as needed
+      canvas.height = 256; // Adjust as needed
 
       // Draw the image onto the canvas
       context.drawImage(image, 0, 0, canvas.width, canvas.height);
@@ -39,7 +39,7 @@ export default async function createAndAddLogo() {
       
       // Position the image mesh
       imageBeltMesh.rotation.y = Math.PI / 2; // Make the belt horizontal
-      const scale = 0.6;
+      const scale = 0.8;
       
       imageBeltMesh.scale.set(scale, scale, scale); // Set scale to 1 for debugging
       imageBeltMesh.position.set(10, 0, 0); // Adjust x to move it away from the globe center

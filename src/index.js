@@ -1,7 +1,8 @@
 import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import createAndAddText from "./components/text";
-import createAndAddLogo from "./components/logo";
+// import createAndAddLogo from "./components/logo";
+import createAndAddLogo from "./components/logo-texture";
 import "./style/index.css";
 import "./style/font.css";
 
@@ -14,9 +15,9 @@ async function setupScene() {
     0.1,
     1000
   );
-  const renderer = new THREE.WebGLRenderer();
+  const renderer = new THREE.WebGLRenderer({alpha: true});
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setClearColor(0xffffff);
+  renderer.setClearColor(0xffffff, 0);
   document.getElementById("globeContainer").appendChild(renderer.domElement);
 
   const controls = new OrbitControls(camera, renderer.domElement);
