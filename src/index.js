@@ -74,7 +74,7 @@ async function setupScene() {
   }
 
   // Call the animate function
-  animate();
+    animate();
 
   // Adjust camera and renderer on window resize
   window.addEventListener("resize", () => {
@@ -86,4 +86,6 @@ async function setupScene() {
   });
 }
 
-setupScene();
+document.fonts.addEventListener("loadingdone", (args) => {
+  setupScene();
+});
