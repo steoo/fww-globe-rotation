@@ -24,7 +24,12 @@ module.exports = {
           filename: 'images/[hash][ext][query]',
         },
       },
-      // CSS rule will be modified in dev/prod configs
+      {
+        test: /\.(woff|woff2|ttf|otf)$/,
+        use: {
+          loader: 'file-loader',
+        },
+      },
     ],
   },
   plugins: [

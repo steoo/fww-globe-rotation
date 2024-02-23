@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import createAndAddText from "./components/text";
 import createAndAddLogo from "./components/logo";
 import "./style/index.css";
+import "./style/font.css";
 
 async function setupScene() {
   // Initialize the scene, camera, and renderer

@@ -10,7 +10,7 @@ export default function createAndAddText() {
   var context = canvas.getContext("2d");
   context.scale(scale, scale)
   
-  context.font = "48px Lastik";
+  context.font = "48px Manrope";
   context.fillStyle = "black";
   context.textAlign = "center";
   context.fillText("Franchise Worldwide", (canvas.width / scale) /2 , (canvas.height / scale) / 2);
