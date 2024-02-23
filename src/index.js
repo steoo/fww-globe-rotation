@@ -19,7 +19,8 @@ async function setupScene() {
   document.getElementById("globeContainer").appendChild(renderer.domElement);
 
   const controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+  
+  controls.enableDamping = true;
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = false;
   controls.enableZoom = false;

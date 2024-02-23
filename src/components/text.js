@@ -5,7 +5,7 @@ export default function createAndAddText() {
   canvas.width = 2048;
   canvas.height = 256;
   var context = canvas.getContext("2d");
-  context.font = "64px Lastik";
+  context.font = "60px Lastik";
   context.fillStyle = "black";
   context.textAlign = "center";
   context.fillText("Franchise Worldwide", canvas.width / 2, canvas.height / 2);
@@ -16,7 +16,7 @@ export default function createAndAddText() {
   texture.wrapT = THREE.ClampToEdgeWrapping;
 
   // Create a cylinder geometry that will act as the belt
-  const beltGeometry = new THREE.CylinderGeometry(10.1, 10.1, 10, 64); // Slightly larger radius than the globe
+  const beltGeometry = new THREE.CylinderGeometry(10.2, 10.2, 8, 64); // Slightly larger radius than the globe
 
   // Create a material with the canvas texture
   const beltMaterial = new THREE.MeshBasicMaterial({
