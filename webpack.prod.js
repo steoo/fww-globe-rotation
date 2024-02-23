@@ -8,11 +8,11 @@ const path = require('path');
 
 module.exports = merge(common, {
   mode: 'production',
+  devtool: false,
   output: {
     filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
-    clean: true, // This option can replace CleanWebpackPlugin
-    publicPath: '/', // Adjust if necessary for GitHub Pages
+    clean: true,
   },
   module: {
     rules: [
@@ -26,6 +26,8 @@ module.exports = merge(common, {
     minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
     splitChunks: {
       chunks: 'all',
+      minSize: 10000,
+      maxSize: 25000,
     },
   },
   plugins: [
