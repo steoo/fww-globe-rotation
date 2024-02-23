@@ -7,6 +7,7 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
+    publicPath: '/'
   },
   module: {
     rules: [
@@ -27,13 +28,17 @@ module.exports = {
           filename: 'images/[hash][ext][query]'
         }
       },
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'index.html', // Path to your source template
-      filename: 'index.html', // Output file name
-      inject: true // Injects the scripts into the html
+      template: 'index.html',
+      filename: 'index.html',
+      inject: true
     })
   ],
   devServer: {

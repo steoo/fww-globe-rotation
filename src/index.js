@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import createAndAddText from "./components/text";
 import createAndAddLogo from "./components/logo";
-
+import "./style/index.css";
 
 async function setupScene() {
   // Initialize the scene, camera, and renderer

@@ -1,0 +1,16 @@
+@font-face {
+  font-family: "Lastik", serif;
+  src: url("./fonts/Lastik-Regular.woff2") format("woff2"),
+    url("./fonts/Lastik-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  background: white;
+  margin: 0;
+  font-family: "Lastik", serif;
+}
+canvas {
+  display: block;
+}
