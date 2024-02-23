@@ -30,7 +30,9 @@ async function setupScene() {
   controls.maxDistance = 25;
   controls.minPolarAngle = Math.PI / 2;
   controls.maxPolarAngle = Math.PI / 2;
-  controls.rotateSpeed = 1.5;
+  controls.rotateSpeed = 0.5;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.3;
 
 
   // Create a sphere geometry for the globe
@@ -75,7 +77,7 @@ async function setupScene() {
   }
 
   // Call the animate function
-    animate();
+  animate();
 
   // Adjust camera and renderer on window resize
   window.addEventListener("resize", () => {
@@ -87,6 +89,6 @@ async function setupScene() {
   });
 }
 
-document.fonts.addEventListener("loadingdone", (args) => {
+document.fonts.addEventListener("loadingdone", () => {
   setupScene();
 });
