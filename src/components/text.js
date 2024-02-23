@@ -1,17 +1,24 @@
 import * as THREE from "three";
 
 export default function createAndAddText() {
+  const scale = window.devicePixelRatio; // Get the device's pixel ratio
+  
   var canvas = document.createElement("canvas");
-  canvas.width = 2048;
-  canvas.height = 256;
+  canvas.width = 2048 * scale;
+  canvas.height = 256 * scale;
+
   var context = canvas.getContext("2d");
-  context.font = "60px Lastik";
+  context.scale(scale, scale)
+  
+  context.font = "48px Lastik";
   context.fillStyle = "black";
   context.textAlign = "center";
-  context.fillText("Franchise Worldwide", canvas.width / 2, canvas.height / 2);
-  
+  context.fillText("Franchise Worldwide", (canvas.width / scale) /2 , (canvas.height / scale) / 2);
+  // document.body.appendChild(canvas)
+
   const texture = new THREE.CanvasTexture(canvas);
   texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
   texture.wrapS = THREE.ClampToEdgeWrapping;
   texture.wrapT = THREE.ClampToEdgeWrapping;
 
@@ -21,6 +28,7 @@ export default function createAndAddText() {
   // Create a material with the canvas texture
   const beltMaterial = new THREE.MeshBasicMaterial({
     map: texture,
+    // color: new THREE.Color(255, 255, 255),
     side: THREE.FrontSide,
     transparent: true,
     depthTest: false,

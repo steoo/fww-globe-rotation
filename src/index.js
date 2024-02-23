@@ -39,7 +39,7 @@ async function setupScene() {
     color: 0xcccccc,
     wireframe: true,
     transparent: true,
-    opacity: 0.05,
+    opacity: 0.1,
     depthTest: false,
   });
 
