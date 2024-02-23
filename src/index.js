@@ -27,10 +27,10 @@ async function setupScene() {
   controls.screenSpacePanning = false;
   controls.enableZoom = false;
   controls.enablePan = false;
-  controls.maxDistance = 25;
+  // controls.maxDistance = 25;
   controls.minPolarAngle = Math.PI / 2;
   controls.maxPolarAngle = Math.PI / 2;
-  controls.rotateSpeed = 0.5;
+  controls.rotateSpeed = 1;
   controls.autoRotate = true;
   controls.autoRotateSpeed = 0.3;
 
@@ -78,6 +78,23 @@ async function setupScene() {
 
   // Call the animate function
   animate();
+
+  window.addEventListener("scroll", () => {
+    const totalScrollHeight = document.body.scrollHeight - window.innerHeight;
+    const currentScroll = window.scrollY;
+    const scrollPercentage = currentScroll / totalScrollHeight;
+
+    // Calculate the new scale: start at 1 and end at 0.1
+    const newScale = 1 - (0.9 * scrollPercentage);
+    const scale = Math.max(newScale, 0.1); // Ensure scale doesn't go below 0.1
+
+    // Apply the scale to globeMesh, beltMesh, and imageMesh
+    globeMesh.scale.set(scale, scale, scale);
+    beltMesh.scale.set(scale, scale, scale);
+    imageMesh.scale.set(scale, scale, scale);
+    
+    renderer.render(scene, camera);    
+  })
 
   // Adjust camera and renderer on window resize
   window.addEventListener("resize", () => {
