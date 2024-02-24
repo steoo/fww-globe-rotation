@@ -18,6 +18,8 @@ async function setupScene() {
   const renderer = new THREE.WebGLRenderer({alpha: true});
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setClearColor(0xffffff, 0);
+
+  console.log(renderer.domElement)
   document.getElementById("globeContainer").appendChild(renderer.domElement);
 
   const controls = new OrbitControls(camera, renderer.domElement);
@@ -107,6 +109,11 @@ async function setupScene() {
   });
 }
 
-document.fonts.addEventListener("loadingdone", () => {
-  setupScene();
-});
+document.addEventListener("DOMContentLoaded", () => {
+  document.fonts.load("48px Lastik").then((e) => {
+    setupScene();
+  }).catch(e => console.error(e))
+})
+// document.fonts.addEventListener("loadingdone", () => {
+//   setupScene();
+// });

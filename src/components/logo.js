@@ -32,7 +32,6 @@ export default async function createAndAddLogo() {
       // Create a cylinder geometry for the image, similar to the text belt
       // var imageBeltGeometry = new THREE.CylinderGeometry(10.1, 10.1, 0.1, 64); // Adjust dimensions as needed
       var imageBeltGeometry = new THREE.PlaneGeometry(5, 5); // Use PlaneGeometry for simplicity
-
       
       // Create a mesh with the geometry and material
       var imageBeltMesh = new THREE.Mesh(imageBeltGeometry, imageMaterial);
