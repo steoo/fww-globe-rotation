@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: './src/index.js',
   performance: {
-    hints: false
+    hints: false,
   },
   module: {
     rules: [
@@ -28,9 +28,9 @@ module.exports = {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,
         type: 'asset/resource',
         generator: {
-          filename: "fonts/[name][ext][query]",
+          filename: 'fonts/[name][ext][query]',
         },
-      }
+      },
     ],
   },
   plugins: [

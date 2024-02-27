@@ -7,12 +7,24 @@ canvas {
   display: block;
 }
 
-#globeSection {
+#globeContainer {
   position: sticky;
-  top: -15%;
+  top: -10%;
   height: 100vh;
+  z-index: 1;
 }
 
 #globeContainer canvas {
   margin: 0 auto;
+}
+
+section {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background-color: white;
+}
+
+canvas {
+  touch-action: pan-y !important;
 }

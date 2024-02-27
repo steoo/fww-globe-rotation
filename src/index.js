@@ -1,9 +1,9 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import createAndAddText from "./components/text";
-import createAndAddLogo from "./components/logo-texture";
-import "./style/index.css";
-import "./style/font.css";
+import createAndAddText from './components/text';
+import createAndAddLogo from './components/logo-texture';
+import './style/index.css';
+import './style/font.css';
 
 async function setupScene() {
   // Initialize the scene, camera, and renderer
@@ -12,20 +12,20 @@ async function setupScene() {
     75,
     window.innerWidth / window.innerHeight,
     0.1,
-    1000
+    1000,
   );
-  const renderer = new THREE.WebGLRenderer({alpha: true});
+  const renderer = new THREE.WebGLRenderer({ alpha: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setClearColor(0xffffff, 0);
 
-  document.getElementById("globeContainer").appendChild(renderer.domElement);
+  document.getElementById('globeContainer').appendChild(renderer.domElement);
 
   const controls = new OrbitControls(camera, renderer.domElement);
-
 
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = false;
+  controls.enabled = false;
   controls.enableZoom = false;
   controls.enablePan = false;
   controls.enableRotate = false;
@@ -35,9 +35,8 @@ async function setupScene() {
   controls.autoRotate = true;
   controls.autoRotateSpeed = 0.5;
 
-
   // Create a sphere geometry for the globe
-  const globeGeometry = new THREE.SphereGeometry(10, 40, 40);
+  const globeGeometry = new THREE.SphereGeometry(10, 32, 32);
 
   // Create a wireframe material
   const globeMaterial = new THREE.MeshBasicMaterial({
@@ -54,16 +53,14 @@ async function setupScene() {
 
   const vFOV = THREE.MathUtils.degToRad(camera.fov); // Convert to radians
   const hFOV = 2 * Math.atan(Math.tan(vFOV / 2) * camera.aspect);
-  
+
   let limitFov = vFOV;
 
   if (camera.aspect < 1) {
     limitFov = hFOV;
   }
-  
-  let distance = 10 / Math.sin(limitFov / 2);
 
-  console.log("distance", vFOV, hFOV)
+  const distance = 10 / Math.sin(limitFov / 2);
 
   // Position the camera
   camera.position.x = 0;
@@ -72,12 +69,12 @@ async function setupScene() {
 
   const beltMesh = createAndAddText();
   const imageMesh = await createAndAddLogo();
-  
-  globeMesh.position.set(0, 0, 0)
-  
+
+  globeMesh.position.set(0, 0, 0);
+
   imageMesh.rotation.y = Math.PI / 2;
   beltMesh.rotation.y = Math.PI;
-  
+
   const globeAndBelts = new THREE.Group();
   globeAndBelts.add(globeMesh);
   globeAndBelts.add(beltMesh);
@@ -99,7 +96,7 @@ async function setupScene() {
   // Call the animate function
   animate();
 
-  window.addEventListener("scroll", () => {
+  window.addEventListener('scroll', () => {
     const totalScrollHeight = document.body.scrollHeight - window.innerHeight;
     const currentScroll = window.scrollY;
     const scrollPercentage = currentScroll / totalScrollHeight;
@@ -114,15 +111,15 @@ async function setupScene() {
     const newRenderSizeW = window.innerWidth * scale;
     const newRenderSizeH = window.innerHeight * scale;
 
-    renderer.setSize(newRenderSizeW, newRenderSizeH)
+    renderer.setSize(newRenderSizeW, newRenderSizeH);
     renderer.setPixelRatio(window.devicePixelRatio);
     camera.updateProjectionMatrix();
 
-    renderer.render(scene, camera);  
-  })
+    renderer.render(scene, camera);
+  });
 
   // Adjust camera and renderer on window resize
-  window.addEventListener("resize", () => {
+  window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -130,8 +127,8 @@ async function setupScene() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.fonts.load("48px Lastik").then((e) => {
+document.addEventListener('DOMContentLoaded', () => {
+  document.fonts.load('48px Lastik').then((e) => {
     setupScene();
-  }).catch(e => console.error(e))
-})
+  }).catch((e) => console.error(e));
+});
