@@ -6,3 +6,13 @@ body {
 canvas {
   display: block;
 }
+
+#globeSection {
+  position: sticky;
+  top: -15%;
+  height: 100vh;
+}
+
+#globeContainer canvas {
+  margin: 0 auto;
+}

@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import createAndAddText from "./components/text";
-// import createAndAddLogo from "./components/logo";
 import createAndAddLogo from "./components/logo-texture";
 import "./style/index.css";
 import "./style/font.css";
@@ -19,7 +18,6 @@ async function setupScene() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setClearColor(0xffffff, 0);
 
-  console.log(renderer.domElement)
   document.getElementById("globeContainer").appendChild(renderer.domElement);
 
   const controls = new OrbitControls(camera, renderer.domElement);
@@ -30,16 +28,16 @@ async function setupScene() {
   controls.screenSpacePanning = false;
   controls.enableZoom = false;
   controls.enablePan = false;
-  // controls.maxDistance = 25;
+  controls.enableRotate = false;
   controls.minPolarAngle = Math.PI / 2;
   controls.maxPolarAngle = Math.PI / 2;
   controls.rotateSpeed = 1;
   controls.autoRotate = true;
-  controls.autoRotateSpeed = 0.3;
+  controls.autoRotateSpeed = 0.5;
 
 
   // Create a sphere geometry for the globe
-  const globeGeometry = new THREE.SphereGeometry(10, 32, 32);
+  const globeGeometry = new THREE.SphereGeometry(10, 40, 40);
 
   // Create a wireframe material
   const globeMaterial = new THREE.MeshBasicMaterial({
@@ -54,22 +52,41 @@ async function setupScene() {
   const globeMesh = new THREE.Mesh(globeGeometry, globeMaterial);
   scene.add(globeMesh);
 
+  const vFOV = THREE.MathUtils.degToRad(camera.fov); // Convert to radians
+  const hFOV = 2 * Math.atan(Math.tan(vFOV / 2) * camera.aspect);
+  
+  let limitFov = vFOV;
+
+  if (camera.aspect < 1) {
+    limitFov = hFOV;
+  }
+  
+  let distance = 10 / Math.sin(limitFov / 2);
+
+  console.log("distance", vFOV, hFOV)
+
   // Position the camera
-  camera.position.z = 35;
+  camera.position.x = 0;
+  camera.position.z = distance * 1.2;
+  camera.updateProjectionMatrix();
 
   const beltMesh = createAndAddText();
   const imageMesh = await createAndAddLogo();
   
-  beltMesh.position.set(0, 0, 0)
-  imageMesh.position.set(0, 0, 0)
-
+  globeMesh.position.set(0, 0, 0)
+  
   imageMesh.rotation.y = Math.PI / 2;
   beltMesh.rotation.y = Math.PI;
+  
+  const globeAndBelts = new THREE.Group();
+  globeAndBelts.add(globeMesh);
+  globeAndBelts.add(beltMesh);
+  globeAndBelts.add(imageMesh);
 
   // Add the belt to the scene
-  scene.add(beltMesh);
-  scene.add(imageMesh);
+  scene.add(globeAndBelts);
 
+  console.log(camera, globeAndBelts, scene);
 
   function animate() {
     requestAnimationFrame(animate);
@@ -89,22 +106,26 @@ async function setupScene() {
 
     // Calculate the new scale: start at 1 and end at 0.1
     const newScale = 1 - (0.9 * scrollPercentage);
-    const scale = Math.max(newScale, 0.1); // Ensure scale doesn't go below 0.1
+    const scale = Math.max(newScale, 0.5); // Ensure scale doesn't go below the last value
 
-    // Apply the scale to globeMesh, beltMesh, and imageMesh
-    globeMesh.scale.set(scale, scale, scale);
-    beltMesh.scale.set(scale, scale, scale);
-    imageMesh.scale.set(scale, scale, scale);
-    
-    renderer.render(scene, camera);    
+    // Apply the scale to the group
+    globeAndBelts.scale.set(scale, scale, scale);
+
+    const newRenderSizeW = window.innerWidth * scale;
+    const newRenderSizeH = window.innerHeight * scale;
+
+    renderer.setSize(newRenderSizeW, newRenderSizeH)
+    renderer.setPixelRatio(window.devicePixelRatio);
+    camera.updateProjectionMatrix();
+
+    renderer.render(scene, camera);  
   })
 
   // Adjust camera and renderer on window resize
   window.addEventListener("resize", () => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    renderer.setSize(width, height);
-    camera.aspect = width / height;
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
   });
 }
@@ -114,6 +135,3 @@ document.addEventListener("DOMContentLoaded", () => {
     setupScene();
   }).catch(e => console.error(e))
 })
-// document.fonts.addEventListener("loadingdone", () => {
-//   setupScene();
-// });
