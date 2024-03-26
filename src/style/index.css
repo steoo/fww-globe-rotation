@@ -19,7 +19,7 @@ canvas {
 }
 
 section {
-  position: sticky;
+  /* position: sticky; */
   top: 0;
   height: 100vh;
   background-color: white;

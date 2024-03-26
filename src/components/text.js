@@ -8,7 +8,7 @@ export default function createAndAddText() {
   canvas.height = 256 * scale;
 
   const context = canvas.getContext('2d');
-  context.font = '48px Lastik';
+  context.font = '36px Lastik';
   context.fillStyle = 'black';
   context.textAlign = 'center';
   context.scale(scale, scale);
@@ -28,7 +28,6 @@ export default function createAndAddText() {
   // Create a material with the canvas texture
   const beltMaterial = new THREE.MeshBasicMaterial({
     map: texture,
-    // color: new THREE.Color(255, 255, 255),
     side: THREE.FrontSide,
     transparent: true,
     depthTest: false,

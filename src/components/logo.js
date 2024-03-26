@@ -11,8 +11,8 @@ export default async function createAndAddLogo() {
       // Create a canvas for the image
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
-      canvas.width = 256; // Adjust as needed
-      canvas.height = 256; // Adjust as needed
+      canvas.width = 64;
+      canvas.height = 64;
 
       // Draw the image onto the canvas
       context.drawImage(image, 0, 0, canvas.width, canvas.height);
@@ -26,7 +26,7 @@ export default async function createAndAddLogo() {
       const imageMaterial = new THREE.MeshBasicMaterial({
         map: texture,
         side: THREE.FrontSide,
-        transparent: true,
+        transparent: false,
       });
 
       // Create a cylinder geometry for the image, similar to the text belt
@@ -37,7 +37,7 @@ export default async function createAndAddLogo() {
 
       // Position the image mesh
       imageBeltMesh.rotation.y = Math.PI / 2; // Make the belt horizontal
-      const scale = 0.8;
+      const scale = 0.5;
 
       imageBeltMesh.scale.set(scale, scale, scale); // Set scale to 1 for debugging
       imageBeltMesh.position.set(10, 0, 0); // Adjust x to move it away from the globe center

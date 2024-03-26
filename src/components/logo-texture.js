@@ -29,7 +29,7 @@ export default async function createAndAddLogo() {
         // Create a mesh with the geometry and material
         const imageBeltMesh = new THREE.Mesh(imageBeltGeometry, imageMaterial);
         imageBeltMesh.rotation.y = Math.PI / 2; // Adjust orientation as needed
-        const scale = 0.8;
+        const scale = 0.5;
         imageBeltMesh.scale.set(scale, scale, scale); // Set the scale
         imageBeltMesh.position.set(10, 0, 0); // Adjust the position as needed
 

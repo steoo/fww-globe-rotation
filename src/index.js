@@ -1,7 +1,9 @@
 import * as THREE from 'three';
+import GUI from 'lil-gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import createAndAddText from './components/text';
 import createAndAddLogo from './components/logo-texture';
+import { onClick, onMouseMove } from './components/clickHandler';
 import './style/index.css';
 import './style/font.css';
 
@@ -25,10 +27,10 @@ async function setupScene() {
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = false;
-  controls.enabled = false;
+  controls.enabled = true;
   controls.enableZoom = false;
   controls.enablePan = false;
-  controls.enableRotate = false;
+  controls.enableRotate = true;
   controls.minPolarAngle = Math.PI / 2;
   controls.maxPolarAngle = Math.PI / 2;
   controls.rotateSpeed = 1;
@@ -43,7 +45,7 @@ async function setupScene() {
     color: 0xcccccc,
     wireframe: true,
     transparent: true,
-    opacity: 0.1,
+    opacity: 0.4,
     depthTest: false,
   });
 
@@ -80,10 +82,37 @@ async function setupScene() {
   globeAndBelts.add(beltMesh);
   globeAndBelts.add(imageMesh);
 
+  // Example values based on expected text position and size
+  const planePosition = { x: 0, y: 0, z: 8 }; // Adjust z to be slightly in front of the belt
+  const planeScale = { width: 10, height: 2 };
+
+  // const invisiblePlaneGeometry = new THREE.PlaneGeometry(planeScale.width, planeScale.height);
+  const invisiblePlaneGeometry = new THREE.CylinderGeometry(10, 10, 4, 24, true, 0, 0.5);
+
+  const invisiblePlaneMaterial = new THREE.MeshBasicMaterial({
+    transparent: true,
+    opacity: 0.6,
+    color: 0x000000,
+    side: THREE.FrontSide,
+    depthTest: true,
+  });
+  const invisiblePlane = new THREE.Mesh(invisiblePlaneGeometry, invisiblePlaneMaterial);
+
+  invisiblePlane.position.set(0, 0, 0);
+  // invisiblePlane.rotation.y = Math.PI;
+
   // Add the belt to the scene
   scene.add(globeAndBelts);
+  scene.add(invisiblePlane);
 
   console.log(camera, globeAndBelts, scene);
+
+  const gui = new GUI();
+  gui.add(document, 'title');
+
+  window.addEventListener('mousemove', onMouseMove, false);
+
+  window.addEventListener('click', () => onClick(scene, camera, invisiblePlane), false);
 
   function animate() {
     requestAnimationFrame(animate);
@@ -96,27 +125,27 @@ async function setupScene() {
   // Call the animate function
   animate();
 
-  window.addEventListener('scroll', () => {
-    const totalScrollHeight = document.body.scrollHeight - window.innerHeight;
-    const currentScroll = window.scrollY;
-    const scrollPercentage = currentScroll / totalScrollHeight;
+  // window.addEventListener('scroll', () => {
+  //   const totalScrollHeight = document.body.scrollHeight - window.innerHeight;
+  //   const currentScroll = window.scrollY;
+  //   const scrollPercentage = currentScroll / totalScrollHeight;
 
-    // Calculate the new scale: start at 1 and end at 0.1
-    const newScale = 1 - (0.9 * scrollPercentage);
-    const scale = Math.max(newScale, 0.5); // Ensure scale doesn't go below the last value
+  //   // Calculate the new scale: start at 1 and end at 0.1
+  //   const newScale = 1 - (0.9 * scrollPercentage);
+  //   const scale = Math.max(newScale, 0.5); // Ensure scale doesn't go below the last value
 
-    // Apply the scale to the group
-    globeAndBelts.scale.set(scale, scale, scale);
+  //   // Apply the scale to the group
+  //   globeAndBelts.scale.set(scale, scale, scale);
 
-    const newRenderSizeW = window.innerWidth * scale;
-    const newRenderSizeH = window.innerHeight * scale;
+  //   const newRenderSizeW = window.innerWidth * scale;
+  //   const newRenderSizeH = window.innerHeight * scale;
 
-    renderer.setSize(newRenderSizeW, newRenderSizeH);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    camera.updateProjectionMatrix();
+  //   renderer.setSize(newRenderSizeW, newRenderSizeH);
+  //   renderer.setPixelRatio(window.devicePixelRatio);
+  //   camera.updateProjectionMatrix();
 
-    renderer.render(scene, camera);
-  });
+  //   renderer.render(scene, camera);
+  // });
 
   // Adjust camera and renderer on window resize
   window.addEventListener('resize', () => {
@@ -128,7 +157,7 @@ async function setupScene() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.fonts.load('48px Lastik').then((e) => {
+  document.fonts.load('48px Lastik').then(() => {
     setupScene();
   }).catch((e) => console.error(e));
 });
