@@ -9,6 +9,7 @@
     "sourceType": "module"
   },
   "rules": {
-    "no-param-reassign": "off"
+    "no-param-reassign": "off",
+    "max-len": ["error", { "code": 200 }]
   }
 }

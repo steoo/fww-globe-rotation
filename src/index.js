@@ -69,41 +69,22 @@ async function setupScene() {
   camera.position.z = distance * 1.2;
   camera.updateProjectionMatrix();
 
-  const beltMesh = createAndAddText();
+  const { beltMesh, textEdges, textInvisiblePlane } = createAndAddText();
   const imageMesh = await createAndAddLogo();
 
   globeMesh.position.set(0, 0, 0);
 
   imageMesh.rotation.y = Math.PI / 2;
-  beltMesh.rotation.y = Math.PI;
 
   const globeAndBelts = new THREE.Group();
   globeAndBelts.add(globeMesh);
   globeAndBelts.add(beltMesh);
+  globeAndBelts.add(textEdges);
   globeAndBelts.add(imageMesh);
-
-  // Example values based on expected text position and size
-  const planePosition = { x: 0, y: 0, z: 8 }; // Adjust z to be slightly in front of the belt
-  const planeScale = { width: 10, height: 2 };
-
-  // const invisiblePlaneGeometry = new THREE.PlaneGeometry(planeScale.width, planeScale.height);
-  const invisiblePlaneGeometry = new THREE.CylinderGeometry(10, 10, 4, 24, true, 0, 0.5);
-
-  const invisiblePlaneMaterial = new THREE.MeshBasicMaterial({
-    transparent: true,
-    opacity: 0.6,
-    color: 0x000000,
-    side: THREE.FrontSide,
-    depthTest: true,
-  });
-  const invisiblePlane = new THREE.Mesh(invisiblePlaneGeometry, invisiblePlaneMaterial);
-
-  invisiblePlane.position.set(0, 0, 0);
-  // invisiblePlane.rotation.y = Math.PI;
 
   // Add the belt to the scene
   scene.add(globeAndBelts);
-  scene.add(invisiblePlane);
+  scene.add(textInvisiblePlane);
 
   console.log(camera, globeAndBelts, scene);
 
@@ -112,7 +93,7 @@ async function setupScene() {
 
   window.addEventListener('mousemove', onMouseMove, false);
 
-  window.addEventListener('click', () => onClick(scene, camera, invisiblePlane), false);
+  window.addEventListener('click', () => onClick(scene, camera, textInvisiblePlane), false);
 
   function animate() {
     requestAnimationFrame(animate);
@@ -124,28 +105,6 @@ async function setupScene() {
 
   // Call the animate function
   animate();
-
-  // window.addEventListener('scroll', () => {
-  //   const totalScrollHeight = document.body.scrollHeight - window.innerHeight;
-  //   const currentScroll = window.scrollY;
-  //   const scrollPercentage = currentScroll / totalScrollHeight;
-
-  //   // Calculate the new scale: start at 1 and end at 0.1
-  //   const newScale = 1 - (0.9 * scrollPercentage);
-  //   const scale = Math.max(newScale, 0.5); // Ensure scale doesn't go below the last value
-
-  //   // Apply the scale to the group
-  //   globeAndBelts.scale.set(scale, scale, scale);
-
-  //   const newRenderSizeW = window.innerWidth * scale;
-  //   const newRenderSizeH = window.innerHeight * scale;
-
-  //   renderer.setSize(newRenderSizeW, newRenderSizeH);
-  //   renderer.setPixelRatio(window.devicePixelRatio);
-  //   camera.updateProjectionMatrix();
-
-  //   renderer.render(scene, camera);
-  // });
 
   // Adjust camera and renderer on window resize
   window.addEventListener('resize', () => {
