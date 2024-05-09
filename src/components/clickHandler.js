@@ -4,10 +4,10 @@ import * as THREE from 'three';
 // and 'beltMesh' added to your scene
 
 // 1. Track mouse position
-const mouse = new THREE.Vector2();
+export const mouse = new THREE.Vector2();
 
 // 2. Setup raycaster
-const raycaster = new THREE.Raycaster();
+export const raycaster = new THREE.Raycaster();
 
 // Function to update mouse position
 export function onMouseMove(event) {
@@ -20,9 +20,6 @@ export function onClick(scene, camera, meshClicked, callback) {
   console.log('onClick MeshClicked', meshClicked, meshClicked.id);
   // Update the picking ray with the camera and mouse position
   raycaster.setFromCamera(mouse, camera);
-  raycaster.near = 0.1;
-  raycaster.far = 500;
-  raycaster.params.Mesh.threshold = 0.1; // Smaller threshold means more precise intersections
 
   // Calculate objects intersecting the picking ray
   const intersects = raycaster.intersectObjects([meshClicked], true);

@@ -4,7 +4,9 @@ import { gsap } from 'gsap';
 import OrbitControls from './utils/OrbitControls';
 import createAndAddText from './components/text';
 import createAndAddLogo from './components/logo-texture';
-import { onClick, onMouseMove } from './components/clickHandler';
+import {
+  onClick, onMouseMove, mouse, raycaster,
+} from './components/clickHandler';
 import './style/index.css';
 import './style/font.css';
 import createAndAddPrinciples from './components/principles';
@@ -43,7 +45,7 @@ async function setupScene() {
   controls.screenSpacePanning = true;
   controls.enabled = true;
   controls.enableZoom = true;
-  controls.enablePan = false;
+  controls.enablePan = true;
   controls.enableRotate = true;
   controls.minPolarAngle = Math.PI / 2;
   controls.maxPolarAngle = Math.PI / 2;
@@ -57,11 +59,11 @@ async function setupScene() {
 
   // If we want to set the panning on the left.
   // Check for touch
-  // controls.mouseButtons = {
-  //   LEFT: MOUSE.PAN,
-  //   MIDDLE: 1,
-  //   RIGHT: 0,
-  // };
+  controls.mouseButtons = {
+    LEFT: 2,
+    MIDDLE: 1,
+    RIGHT: 0,
+  };
 
   const globeGeometry = new THREE.SphereGeometry(10, 32, 32);
 
@@ -85,36 +87,23 @@ async function setupScene() {
 
   const {
     beltMesh,
-    boxHelper,
   } = createAndAddText();
-  const { principleMesh, principleEdges } = createAndAddPrinciples(scene);
+  const principleMesh = await createAndAddPrinciples(scene);
   const imageBeltMesh = await createAndAddLogo();
-  const axesHelper = new THREE.AxesHelper(20); // Size of the axes in units
-  // globeMesh.add(axesHelper); // Add it to the globeMesh so it moves with the globe
 
-  const helper = new THREE.AxesHelper(10);
-  imageBeltMesh.add(helper);
+  // const helper = new THREE.AxesHelper(10);
+  // imageBeltMesh.add(helper);
 
   globeMesh.position.set(0, 0, 0);
 
   const globeMeshBoxHelper = new THREE.BoxHelper(globeMesh, 0x0000ff);
-  const imageMeshBoxHelper = new THREE.BoxHelper(imageBeltMesh, 0x0000ff);
+  // const imageMeshBoxHelper = new THREE.BoxHelper(imageBeltMesh, 0x0000ff);
 
   scene.add(globeMesh);
   scene.add(beltMesh);
-  // scene.add(textEdges);
-  scene.add(boxHelper);
   scene.add(imageBeltMesh);
-  // scene.add(imageMeshBoxHelper);
-  scene.add(globeMeshBoxHelper);
   // scene.add(principleMesh);
-  // globeAndBelts.add(principleEdges);
-
-  // Add the belt to the scene
-  // scene.add(textInvisiblePlane);
-
-  // const gui = new GUI();
-  // gui.add(document, 'title')
+  scene.add(globeMeshBoxHelper);
 
   // smooth programmatic zoom
   function smoothZoom(targetDistance, duration = 2000) {
@@ -164,8 +153,15 @@ async function setupScene() {
   window.addEventListener(
     'click',
     () => onClick(scene, camera, beltMesh, () => {
-      const newCameraPosition = controls.target.distanceTo(camera.position) / 10;
-      console.log('click, new camera position', newCameraPosition, globeMesh);
+      // Usage: zoom in to twice the distance from the current target
+      smoothZoom(principleMesh.position.z + minDistance, 1000);
+    }),
+    false,
+  );
+
+  window.addEventListener(
+    'click',
+    () => onClick(scene, camera, imageBeltMesh, () => {
       // Usage: zoom in to twice the distance from the current target
       smoothZoom(minDistance, 1000);
     }),
@@ -174,19 +170,42 @@ async function setupScene() {
 
   window.addEventListener(
     'click',
-    () => onClick(scene, camera, imageBeltMesh, () => {
-      const newCameraPosition = controls.target.distanceTo(camera.position) / 10;
-      console.log('click, new camera position', newCameraPosition, globeMesh);
+    () => onClick(scene, camera, principleMesh, () => {
       // Usage: zoom in to twice the distance from the current target
-      smoothZoom(minDistance, 1000);
+      smoothZoom(maxDistance, 1000);
     }),
     false,
   );
 
+  function checkIntersections() {
+    if (camera && camera.isPerspectiveCamera) {
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects([beltMesh, imageBeltMesh, principleMesh], true);
+
+      if (intersects.length > 0) {
+        // console.log('moving cursor around', intersects);
+        document.body.style.cursor = 'pointer'; // Change cursor style when over a mesh
+        return;
+      }
+
+      document.body.style.cursor = 'auto';
+    }
+  }
+
+  let lastTime = 0;
+  const interval = 100; // Check every 100 ms
+
   function animate() {
     requestAnimationFrame(animate);
-
     controls.update();
+
+    const time = performance.now();
+    const delta = time - lastTime;
+
+    if (delta > interval) {
+      checkIntersections();
+      lastTime = time; // update the last time intersection was checked
+    }
 
     renderer.render(scene, camera);
   }

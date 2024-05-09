@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-export default async function createAndAddLogo() {
+export default function createAndAddLogo() {
   return new Promise((resolve, reject) => {
     // Create a texture loader
     const loader = new THREE.TextureLoader();
@@ -28,6 +28,7 @@ export default async function createAndAddLogo() {
 
         // Create a mesh with the geometry and material
         const imageBeltMesh = new THREE.Mesh(imageBeltGeometry, imageMaterial);
+        imageBeltMesh.name = 'LOGO FW';
         imageBeltMesh.rotation.y = Math.PI; // Adjust orientation as needed
 
         const scale = 0.5;
