@@ -42,8 +42,8 @@ async function setupScene() {
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = true;
   controls.enabled = true;
-  controls.enableZoom = true;
-  controls.enablePan = false;
+  controls.enableZoom = false;
+  controls.enablePan = true;
   controls.enableRotate = true;
   controls.minPolarAngle = Math.PI / 2;
   controls.maxPolarAngle = Math.PI / 2;
@@ -53,7 +53,16 @@ async function setupScene() {
   controls.autoRotate = false;
   controls.autoRotateSpeed = 0.5;
 
-  // Create a sphere geometry for the globe
+  controls.listenToKeyEvents(window);
+
+  // If we want to set the panning on the left.
+  // Check for touch
+  // controls.mouseButtons = {
+  //   LEFT: MOUSE.PAN,
+  //   MIDDLE: 1,
+  //   RIGHT: 0,
+  // };
+
   const globeGeometry = new THREE.SphereGeometry(10, 32, 32);
 
   // Create a wireframe material
@@ -99,6 +108,7 @@ async function setupScene() {
   // const gui = new GUI();
   // gui.add(document, 'title');
 
+  // smooth programmatic zoom
   function smoothZoom(targetDistance, duration = 2000) {
     const startDistance = controls.target.distanceTo(camera.position);
     const targetVector = new THREE.Vector3().copy(controls.target); // Get a copy of the target position
@@ -108,23 +118,6 @@ async function setupScene() {
     // const startTime = performance.now();
 
     function animateZoom() {
-      // const elapsed = performance.now() - startTime;
-      // const t = elapsed / duration;
-      // const easeInOut = t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2; // Improved easing function
-
-      // let currentDistance = startDistance + (targetDistance - startDistance) * easeInOut;
-      // currentDistance = Math.max(minDistance, Math.min(maxDistance, currentDistance));
-
-      // camera.position.copy(targetVector).add(directionVector.clone().multiplyScalar(currentDistance)); // Set new camera position
-
-      // if (elapsed < duration) {
-      //   controls.update();
-      //   requestAnimationFrame(animateZoom);
-      // } else {
-      //   camera.position.copy(targetVector).add(directionVector.multiplyScalar(targetDistance)); // Ensure precise final position
-      //   controls.update();
-      // }
-
       const animationObject = { currentDistance: startDistance };
 
       gsap.fromTo(
@@ -135,9 +128,8 @@ async function setupScene() {
           duration: duration / 1000, // GSAP uses seconds instead of milliseconds
           ease: 'power2.inOut', // This uses GSAP's built-in "easeInOut" power2 curve
           onUpdate() {
-            const { currentDistance } = this;
-            camera.position.copy(targetVector).add(directionVector.clone().multiplyScalar(currentDistance)); // Set new camera position
-            console.log('new camera position on update', camera.position, currentDistance);
+            camera.position.copy(targetVector).add(directionVector.clone().multiplyScalar(animationObject.currentDistance)); // Set new camera position
+            console.log('new camera position on update', camera.position, animationObject.currentDistance, this);
             controls.update();
           },
           onComplete: () => {
@@ -150,7 +142,16 @@ async function setupScene() {
     animateZoom();
   }
 
-  window.addEventListener('mousemove', onMouseMove, false);
+  // panning on cursor moving
+  window.addEventListener('mousemove', (event) => {
+    const obj = {};
+    const multiplier = 10;
+    obj.clientX = (event.clientX / window.innerWidth) * multiplier;
+    obj.clientY = (event.clientY / window.innerHeight) * multiplier;
+
+    console.log(obj);
+    // controls.handleMouseMovePan(obj);
+  }, false);
 
   window.addEventListener(
     'click',
