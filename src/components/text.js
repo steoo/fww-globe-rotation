@@ -4,8 +4,8 @@ export default function createAndAddText() {
   const scale = window.devicePixelRatio; // Get the device's pixel ratio
 
   const canvas = document.createElement('canvas');
-  canvas.width = 360 * 2 * scale;
-  canvas.height = 64 * 2 * scale;
+  canvas.width = 360 * scale;
+  canvas.height = 64 * scale;
 
   const canvasOffsetPositioning = 10;
 
@@ -37,7 +37,7 @@ export default function createAndAddText() {
 
   const invisiblePlaneMaterial = new THREE.MeshBasicMaterial({
     transparent: true,
-    opacity: 0,
+    opacity: 0.2,
     color: 0x000000,
     side: THREE.FrontSide,
     depthTest: true,
@@ -51,23 +51,17 @@ export default function createAndAddText() {
     map: texture,
     side: THREE.FrontSide,
     transparent: true,
-    depthTest: false,
+    depthTest: true,
   });
-
-  const edgesGeometry = new THREE.EdgesGeometry(beltGeometry);
-  const lineMaterial = new THREE.LineBasicMaterial({
-    color: 0x0000ff, // Set the desired color of your border
-    transparent: true,
-    side: THREE.FrontSide,
-    opacity: 1,
-    depthTest: false,
-  });
-
-  const textEdges = new THREE.LineSegments(edgesGeometry, lineMaterial);
 
   // Create a mesh with the geometry and material
   const beltMesh = new THREE.Mesh(beltGeometry, beltMaterial);
-  // beltMesh.rotation.y = Math.PI;
+  beltMesh.geometry.computeBoundingBox();
+  const boxHelper = new THREE.BoxHelper(beltMesh, 0xff0000);
 
-  return { beltMesh, textEdges, textInvisiblePlane };
+  return {
+    beltMesh,
+    textInvisiblePlane,
+    boxHelper,
+  };
 }

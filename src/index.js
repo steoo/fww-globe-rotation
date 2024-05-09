@@ -42,8 +42,8 @@ async function setupScene() {
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = true;
   controls.enabled = true;
-  controls.enableZoom = false;
-  controls.enablePan = true;
+  controls.enableZoom = true;
+  controls.enablePan = false;
   controls.enableRotate = true;
   controls.minPolarAngle = Math.PI / 2;
   controls.maxPolarAngle = Math.PI / 2;
@@ -71,7 +71,7 @@ async function setupScene() {
     wireframe: true,
     transparent: true,
     opacity: 0.3,
-    depthTest: false,
+    depthTest: true,
   });
 
   // Create a mesh with the geometry and material
@@ -83,30 +83,38 @@ async function setupScene() {
   camera.position.z = maxDistance;
   camera.updateProjectionMatrix();
 
-  const { beltMesh, textEdges, textInvisiblePlane } = createAndAddText();
+  const {
+    beltMesh,
+    boxHelper,
+  } = createAndAddText();
   const { principleMesh, principleEdges } = createAndAddPrinciples(scene);
-  const imageMesh = await createAndAddLogo();
+  const imageBeltMesh = await createAndAddLogo();
   const axesHelper = new THREE.AxesHelper(20); // Size of the axes in units
-  globeMesh.add(axesHelper); // Add it to the globeMesh so it moves with the globe
+  // globeMesh.add(axesHelper); // Add it to the globeMesh so it moves with the globe
+
+  const helper = new THREE.AxesHelper(10);
+  imageBeltMesh.add(helper);
 
   globeMesh.position.set(0, 0, 0);
 
-  imageMesh.rotation.y = Math.PI / 2;
+  const globeMeshBoxHelper = new THREE.BoxHelper(globeMesh, 0x0000ff);
+  const imageMeshBoxHelper = new THREE.BoxHelper(imageBeltMesh, 0x0000ff);
 
-  const globeAndBelts = new THREE.Group();
-  globeAndBelts.add(globeMesh);
-  globeAndBelts.add(beltMesh);
-  // globeAndBelts.add(textEdges);
-  globeAndBelts.add(imageMesh);
+  scene.add(globeMesh);
+  scene.add(beltMesh);
+  // scene.add(textEdges);
+  scene.add(boxHelper);
+  scene.add(imageBeltMesh);
+  // scene.add(imageMeshBoxHelper);
+  scene.add(globeMeshBoxHelper);
   // scene.add(principleMesh);
   // globeAndBelts.add(principleEdges);
 
   // Add the belt to the scene
-  scene.add(globeAndBelts);
-  scene.add(textInvisiblePlane);
+  // scene.add(textInvisiblePlane);
 
   // const gui = new GUI();
-  // gui.add(document, 'title');
+  // gui.add(document, 'title')
 
   // smooth programmatic zoom
   function smoothZoom(targetDistance, duration = 2000) {
@@ -129,7 +137,7 @@ async function setupScene() {
           ease: 'power2.inOut', // This uses GSAP's built-in "easeInOut" power2 curve
           onUpdate() {
             camera.position.copy(targetVector).add(directionVector.clone().multiplyScalar(animationObject.currentDistance)); // Set new camera position
-            console.log('new camera position on update', camera.position, animationObject.currentDistance, this);
+            // console.log('new camera position on update', camera.position, animationObject.currentDistance, this);
             controls.update();
           },
           onComplete: () => {
@@ -149,13 +157,24 @@ async function setupScene() {
     obj.clientX = (event.clientX / window.innerWidth) * multiplier;
     obj.clientY = (event.clientY / window.innerHeight) * multiplier;
 
-    console.log(obj);
+    // console.log(obj);
     // controls.handleMouseMovePan(obj);
   }, false);
 
   window.addEventListener(
     'click',
-    () => onClick(scene, camera, textInvisiblePlane, () => {
+    () => onClick(scene, camera, beltMesh, () => {
+      const newCameraPosition = controls.target.distanceTo(camera.position) / 10;
+      console.log('click, new camera position', newCameraPosition, globeMesh);
+      // Usage: zoom in to twice the distance from the current target
+      smoothZoom(minDistance, 1000);
+    }),
+    false,
+  );
+
+  window.addEventListener(
+    'click',
+    () => onClick(scene, camera, imageBeltMesh, () => {
       const newCameraPosition = controls.target.distanceTo(camera.position) / 10;
       console.log('click, new camera position', newCameraPosition, globeMesh);
       // Usage: zoom in to twice the distance from the current target

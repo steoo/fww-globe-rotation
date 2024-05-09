@@ -28,16 +28,14 @@ export default async function createAndAddLogo() {
 
         // Create a mesh with the geometry and material
         const imageBeltMesh = new THREE.Mesh(imageBeltGeometry, imageMaterial);
-        imageBeltMesh.rotation.y = Math.PI / 2; // Adjust orientation as needed
+        imageBeltMesh.rotation.y = Math.PI; // Adjust orientation as needed
+
         const scale = 0.5;
         imageBeltMesh.scale.set(scale, scale, scale); // Set the scale
-        imageBeltMesh.position.set(10, 0, 0); // Adjust the position as needed
-
-        const group = new THREE.Group();
-        group.add(imageBeltMesh);
+        imageBeltMesh.position.set(0, 0, -10); // Adjust the position as needed
 
         // Resolve the promise with the group
-        resolve(group);
+        resolve(imageBeltMesh);
       },
       undefined, // onProgress callback (optional)
       (error) => {

@@ -36,16 +36,13 @@ export default async function createAndAddLogo() {
       const imageBeltMesh = new THREE.Mesh(imageBeltGeometry, imageMaterial);
 
       // Position the image mesh
-      imageBeltMesh.rotation.y = Math.PI / 2; // Make the belt horizontal
       const scale = 0.5;
 
       imageBeltMesh.scale.set(scale, scale, scale); // Set scale to 1 for debugging
       imageBeltMesh.position.set(10, 0, 0); // Adjust x to move it away from the globe center
 
-      const group = new THREE.Group();
-      group.add(imageBeltMesh);
       // Add the image mesh to the scene
-      resolve(group);
+      resolve(imageBeltMesh);
     };
 
     image.onerror = (...args) => {

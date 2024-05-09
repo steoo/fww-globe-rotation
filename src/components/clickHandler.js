@@ -17,17 +17,23 @@ export function onMouseMove(event) {
 
 // 3. Add a click event listener
 export function onClick(scene, camera, meshClicked, callback) {
+  console.log('onClick MeshClicked', meshClicked, meshClicked.id);
   // Update the picking ray with the camera and mouse position
   raycaster.setFromCamera(mouse, camera);
+  raycaster.near = 0.1;
+  raycaster.far = 500;
+  raycaster.params.Mesh.threshold = 0.1; // Smaller threshold means more precise intersections
 
   // Calculate objects intersecting the picking ray
-  const intersects = raycaster.intersectObjects(scene.children, true);
+  const intersects = raycaster.intersectObjects([meshClicked], true);
+
+  console.log(intersects);
 
   for (let i = 0; i < intersects.length; i += 1) {
     // 4. Check for 'meshClicked' intersection
     if (intersects[i].object === meshClicked) {
       // 5. Do something when 'meshClicked' is clicked
-      console.log('meshClicked clicked!', meshClicked);
+      console.log('meshClicked interesected!', meshClicked, meshClicked.id);
       // Implement your functionality here
       if (callback) {
         callback();
@@ -36,3 +42,6 @@ export function onClick(scene, camera, meshClicked, callback) {
     }
   }
 }
+
+// do not remove this or the click won't be precise on the meshes
+window.addEventListener('mousemove', onMouseMove, false);

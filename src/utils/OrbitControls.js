@@ -114,8 +114,6 @@ class OrbitControls extends EventDispatcher {
     // the target DOM element for key events
     this._domElementKeyEvents = null;
 
-    console.log('camera original position', this.object.position);
-
     //
     // public methods
     //
@@ -510,7 +508,7 @@ class OrbitControls extends EventDispatcher {
     }());
 
     function dollyOut(dollyScale) {
-      console.log('dollying out', scope.object.position);
+      // console.log('dollying out', scope.object.position);
       if (scope.object.isPerspectiveCamera || scope.object.isOrthographicCamera) {
         scale /= dollyScale;
       } else {
@@ -520,7 +518,7 @@ class OrbitControls extends EventDispatcher {
     }
 
     function dollyIn(dollyScale) {
-      console.log('dollying in', scope.object.position);
+      // console.log('dollying in', scope.object.position);
       if (scope.object.isPerspectiveCamera || scope.object.isOrthographicCamera) {
         scale *= dollyScale;
       } else {

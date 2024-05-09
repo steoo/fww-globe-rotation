@@ -8,26 +8,26 @@ export default function scrollerEnabler(controls) {
   function setOrbitControlsEnabled(enabled) {
     controls.enabled = enabled;
     enabled
-      ? document.querySelector("#globeSection").style.zIndex = 0
-      : document.querySelector("#globeSection").style.zIndex = -1
+      ? document.querySelector('#globeSection').style.zIndex = 0
+      : document.querySelector('#globeSection').style.zIndex = -1;
   }
 
   // Listen for touchstart event to capture the start position
-  document.addEventListener('touchstart', function(e) {
+  document.addEventListener('touchstart', (e) => {
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
     setOrbitControlsEnabled(true);
   }, false);
 
   // Listen for touchmove event to determine the direction
-  document.addEventListener('touchmove', function(e) {
+  document.addEventListener('touchmove', (e) => {
     touchEndY = e.touches[0].clientY;
-    
+
     // Calculate the difference in touch start and end Y positions
-    var deltaY = touchEndY - touchStartY;
-    
+    const deltaY = touchEndY - touchStartY;
+
     // A threshold to determine a "vertical swipe" can be adjusted as needed
-    var verticalSwipeThreshold = 10;
+    const verticalSwipeThreshold = 10;
 
     // Check if the vertical movement is significant enough to be considered a swipe
     if (Math.abs(deltaY) > verticalSwipeThreshold) {
@@ -40,8 +40,7 @@ export default function scrollerEnabler(controls) {
   }, false);
 
   // Optionally, re-enable controls when the touch ends
-  document.addEventListener('touchend', function (e) {
+  document.addEventListener('touchend', (e) => {
     // setOrbitControlsEnabled(false);
   }, false);
-
 }
