@@ -18,6 +18,13 @@ module.exports = {
         },
       },
       {
+        test: /\.(json)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'resources/[hash][ext][query]',
+        },
+      },
+      {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         type: 'asset/resource',
         generator: {

@@ -4,8 +4,8 @@ export default function createAndAddText() {
   const scale = window.devicePixelRatio; // Get the device's pixel ratio
 
   const canvas = document.createElement('canvas');
-  canvas.width = 360 * scale;
-  canvas.height = 64 * scale;
+  canvas.width = 360 * 2 * scale;
+  canvas.height = 64 * 2 * scale;
 
   const canvasOffsetPositioning = 10;
 
@@ -15,7 +15,7 @@ export default function createAndAddText() {
   context.textAlign = 'center';
   context.letterSpacing = '-2px';
   context.scale(scale, scale);
-  context.fillText('Franchise Worldwide', canvas.width / scale / 2, (canvas.height / scale / 2) + canvasOffsetPositioning);
+  context.fillText('Franchise Worldwide', canvas.width / scale / 2, (canvas.height / scale) / 2 + canvasOffsetPositioning);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.minFilter = THREE.LinearFilter;
@@ -27,15 +27,17 @@ export default function createAndAddText() {
   const height = 2;
   const radialSegments = 16;
   const heightSegments = 1;
+  const thetaStart = -0.5;
+  const thetaLength = Math.PI / 3;
 
   // Create a cylinder geometry that will act as the belt
   // Slightly larger radius than the globe
-  const beltGeometry = new THREE.CylinderGeometry(radius, radius, height, radialSegments, heightSegments, true, 0, Math.PI / 3);
-  const invisiblePlaneGeometry = new THREE.CylinderGeometry(radius, radius, height, radialSegments, heightSegments, true, 0, Math.PI / 3);
+  const beltGeometry = new THREE.CylinderGeometry(radius, radius, height, radialSegments, heightSegments, true, thetaStart, thetaLength);
+  const invisiblePlaneGeometry = new THREE.CylinderGeometry(radius, radius, height, radialSegments, heightSegments, true, thetaStart, thetaLength);
 
   const invisiblePlaneMaterial = new THREE.MeshBasicMaterial({
     transparent: true,
-    opacity: 0.1,
+    opacity: 0,
     color: 0x000000,
     side: THREE.FrontSide,
     depthTest: true,
@@ -56,7 +58,9 @@ export default function createAndAddText() {
   const lineMaterial = new THREE.LineBasicMaterial({
     color: 0x0000ff, // Set the desired color of your border
     transparent: true,
+    side: THREE.FrontSide,
     opacity: 1,
+    depthTest: false,
   });
 
   const textEdges = new THREE.LineSegments(edgesGeometry, lineMaterial);

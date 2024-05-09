@@ -16,14 +16,12 @@ export function onMouseMove(event) {
 }
 
 // 3. Add a click event listener
-export function onClick(scene, camera, meshClicked) {
+export function onClick(scene, camera, meshClicked, callback) {
   // Update the picking ray with the camera and mouse position
   raycaster.setFromCamera(mouse, camera);
 
   // Calculate objects intersecting the picking ray
   const intersects = raycaster.intersectObjects(scene.children, true);
-
-  console.log(intersects);
 
   for (let i = 0; i < intersects.length; i += 1) {
     // 4. Check for 'meshClicked' intersection
@@ -31,6 +29,9 @@ export function onClick(scene, camera, meshClicked) {
       // 5. Do something when 'meshClicked' is clicked
       console.log('meshClicked clicked!', meshClicked);
       // Implement your functionality here
+      if (callback) {
+        callback();
+      }
       break; // Assuming you only want the first intersection
     }
   }

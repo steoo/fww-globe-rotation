@@ -10,6 +10,8 @@
   },
   "rules": {
     "no-param-reassign": "off",
-    "max-len": ["error", { "code": 200 }]
+    "max-len": ["error", { "code": 160 }],
+    "no-plusplus": "off",
+    "default-case": "off"
   }
 }
